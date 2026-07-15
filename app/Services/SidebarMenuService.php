@@ -1,0 +1,207 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\SidebarMenu;
+use App\Repositories\SidebarMenuRepository;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+class SidebarMenuService
+{
+    protected $sidebarMenuRepository;
+
+    public function __construct(SidebarMenuRepository $sidebarMenuRepository)
+    {
+        $this->sidebarMenuRepository = $sidebarMenuRepository;
+    }
+
+    public function getSidebar()
+    {
+        try {
+            return $this->sidebarMenuRepository->getSidebar();
+        } catch (\Throwable $e) {
+            Log::error('Erro ao carregar sidebar menus', [
+                'message' => $e->getMessage(),
+            ]);
+            return collect();
+        }
+    }
+
+    public function all()
+    {
+        try {
+            return $this->sidebarMenuRepository->all();
+        } catch (\Throwable $e) {
+            Log::error('Erro ao carregar sidebar menus', [
+                'message' => $e->getMessage(),
+            ]);
+            return collect();
+        }
+    }
+
+    public function listToCreate()
+    {
+        try {
+            return $this->sidebarMenuRepository->listToCreate();
+        } catch (\Throwable $e) {
+            Log::error('Erro ao carregar sidebar menus para criação', [
+                'message' => $e->getMessage(),
+            ]);
+            return collect();
+        }
+    }
+
+    public function find($id)
+    {
+        try {
+            return $this->sidebarMenuRepository->find($id);
+        } catch (\Throwable $e) {
+            Log::error('Erro ao buscar menu', [
+                'message' => $e->getMessage(),
+                'menu_id' => $id,
+            ]);
+            return null;
+        }
+    }
+
+
+    public function create(array $data)
+    {
+        $data['order'] = $this->defineOrder($data['parent_id']);
+
+        try {
+            return $this->sidebarMenuRepository->create($data);
+        } catch (\Throwable $e) {
+            Log::error('Erro ao criar menu', [
+                'message' => $e->getMessage(),
+                'data' => $data,
+            ]);
+            return null;
+        }
+    }
+
+    private function defineOrder($parent)
+    {
+        if (!$parent) {
+            $menu = SidebarMenu::select('order')
+                ->whereNull('parent_id')
+                ->orderByDesc('order')
+                ->pluck('order')
+                ->first();
+        } else {
+            $menu = SidebarMenu::where('parent_id', $parent)
+                ->orderByDesc('order')
+                ->pluck('order')
+                ->first();
+        }
+
+        $order = $menu + 1;
+
+        return $order;
+    }
+
+    public function delete($id)
+    {
+        try {
+            return $this->sidebarMenuRepository->delete($id);
+        } catch (\Throwable $e) {
+            Log::error('Erro ao excluir menu', [
+                'message' => $e->getMessage(),
+                'menu_id' => $id,
+            ]);
+            return null;
+        }
+    }
+
+    public function update(array $data, $id)
+    {
+        try {
+            return DB::transaction(function () use ($data, $id) {
+                $menu = $this->sidebarMenuRepository->findOrFail($id);
+                $children = $data['children'] ?? [];
+
+                unset($data['children']);
+
+                $this->sidebarMenuRepository->updateModel($menu, $data);
+                $this->syncChildren($menu, $children);
+
+                return $this->sidebarMenuRepository->treeFromMenu($menu->id);
+            });
+        } catch (\Throwable $e) {
+            Log::error('Erro ao editar menu', [
+                'message' => $e->getMessage(),
+                'menu_id' => $id,
+            ]);
+            return null;
+        }
+    }
+
+    public function changeMenuOrder($id)
+    {
+        try {
+            return DB::transaction(function () use ($id) {
+                $menu = $this->sidebarMenuRepository->findOrFail($id);
+
+                if ($menu->order <= 1) {
+                    return $menu;
+                }
+
+                $newOrder = $menu->order - 1;
+                $menuToReplace = $this->sidebarMenuRepository->findByParentAndOrder($menu->parent_id, $newOrder);
+
+                if (!$menuToReplace) {
+                    return $menu;
+                }
+
+                $oldOrder = $menu->order;
+
+                $this->sidebarMenuRepository->updateModel($menu, [
+                    'order' => $newOrder,
+                ]);
+
+                $this->sidebarMenuRepository->updateModel($menuToReplace, [
+                    'order' => $oldOrder,
+                ]);
+
+                return $menu->fresh();
+            });
+        } catch (\Throwable $e) {
+            Log::error('Erro ao alterar ordem do menu', [
+                'message' => $e->getMessage(),
+                'menu_id' => $id,
+            ]);
+            return null;
+        }
+    }
+
+    private function syncChildren(SidebarMenu $parent, array $children): void
+    {
+        $sentIds = collect($children)
+            ->pluck('id')
+            ->filter()
+            ->values()
+            ->toArray();
+
+        $this->sidebarMenuRepository->deleteChildrenExcept($parent, $sentIds);
+
+        foreach ($children as $childData) {
+            $grandChildren = $childData['children'] ?? [];
+
+            unset($childData['children']);
+
+            if (!empty($childData['id'])) {
+                $child = $this->sidebarMenuRepository->findOrFail($childData['id']);
+                $this->sidebarMenuRepository->updateModel($child, $childData);
+
+                if (!$child->isChildOf($parent)) {
+                    $this->sidebarMenuRepository->appendToParent($child, $parent);
+                }
+            } else {
+                $child = $this->sidebarMenuRepository->createChild($parent, $childData);
+            }
+
+            $this->syncChildren($child, $grandChildren);
+        }
+    }
+}
