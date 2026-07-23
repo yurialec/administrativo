@@ -19,7 +19,11 @@ class SidebarMenuService
     public function getSidebar()
     {
         try {
-            return $this->sidebarMenuRepository->getSidebar();
+            if (!session()->has('sidebar')) {
+                $this->refreshSidebarSession();
+            }
+
+            return session('sidebar');
         } catch (\Throwable $e) {
             Log::error('Erro ao carregar sidebar menus', [
                 'message' => $e->getMessage(),
@@ -71,7 +75,13 @@ class SidebarMenuService
         $data['order'] = $this->defineOrder($data['parent_id']);
 
         try {
-            return $this->sidebarMenuRepository->create($data);
+            $menu = $this->sidebarMenuRepository->create($data);
+
+            if ($menu) {
+                $this->refreshSidebarSession();
+            }
+
+            return $menu;
         } catch (\Throwable $e) {
             Log::error('Erro ao criar menu', [
                 'message' => $e->getMessage(),
@@ -104,7 +114,13 @@ class SidebarMenuService
     public function delete($id)
     {
         try {
-            return $this->sidebarMenuRepository->delete($id);
+            $deleted = $this->sidebarMenuRepository->delete($id);
+
+            if ($deleted) {
+                $this->refreshSidebarSession();
+            }
+
+            return $deleted;
         } catch (\Throwable $e) {
             Log::error('Erro ao excluir menu', [
                 'message' => $e->getMessage(),
@@ -117,7 +133,7 @@ class SidebarMenuService
     public function update(array $data, $id)
     {
         try {
-            return DB::transaction(function () use ($data, $id) {
+            $menu = DB::transaction(function () use ($data, $id) {
                 $menu = $this->sidebarMenuRepository->findOrFail($id);
                 $children = $data['children'] ?? [];
 
@@ -128,6 +144,12 @@ class SidebarMenuService
 
                 return $this->sidebarMenuRepository->treeFromMenu($menu->id);
             });
+
+            if ($menu) {
+                $this->refreshSidebarSession();
+            }
+
+            return $menu;
         } catch (\Throwable $e) {
             Log::error('Erro ao editar menu', [
                 'message' => $e->getMessage(),
@@ -140,7 +162,7 @@ class SidebarMenuService
     public function changeMenuOrder($id)
     {
         try {
-            return DB::transaction(function () use ($id) {
+            $menu = DB::transaction(function () use ($id) {
                 $menu = $this->sidebarMenuRepository->findOrFail($id);
 
                 if ($menu->order <= 1) {
@@ -166,6 +188,12 @@ class SidebarMenuService
 
                 return $menu->fresh();
             });
+
+            if ($menu) {
+                $this->refreshSidebarSession();
+            }
+
+            return $menu;
         } catch (\Throwable $e) {
             Log::error('Erro ao alterar ordem do menu', [
                 'message' => $e->getMessage(),
@@ -203,5 +231,10 @@ class SidebarMenuService
 
             $this->syncChildren($child, $grandChildren);
         }
+    }
+
+    private function refreshSidebarSession(): void
+    {
+        session()->put('sidebar', $this->sidebarMenuRepository->getSidebar());
     }
 }

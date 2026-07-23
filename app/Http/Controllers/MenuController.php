@@ -71,7 +71,7 @@ class MenuController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'icon' => 'nullable|string|max:255',
-            'url' => 'nullable|string|max:255',
+            'route' => 'nullable|string|max:255',
             'parent_id' => 'nullable|exists:sidebar_menus,id',
             'children' => 'nullable|array',
             'children.*.title' => 'required|string|max:255',

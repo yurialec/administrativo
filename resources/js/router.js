@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import Dashboard from './pages/Dashboard.vue';
 import Menus from './pages/Menus.vue';
-import Perfis from './pages/Perfis.vue';
+import Roles from './pages/Roles.vue';
 
 
 const routes = [
@@ -33,9 +33,14 @@ const routes = [
         props: true
     },
     {
-        path: '/admin/perfis',
-        name: 'admin.perfis',
-        component: Perfis
+        path: '/admin/roles',
+        name: 'admin.roles',
+        component: Roles
+    },
+    {
+        path: '/admin/roles/create',
+        name: 'admin.roles.create',
+        component: () => import('./pages/CreateRole.vue')
     },
     // {
     //     path: '/admin/permissoes',

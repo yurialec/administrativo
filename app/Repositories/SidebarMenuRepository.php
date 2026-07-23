@@ -19,7 +19,8 @@ class SidebarMenuRepository
             ->where('is_active', true)
             ->orderBy('order')
             ->get()
-            ->toTree();
+            ->toTree()
+            ->toArray();
     }
 
     public function all()

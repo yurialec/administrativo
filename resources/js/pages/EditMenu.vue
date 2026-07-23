@@ -33,7 +33,7 @@
                                     placeholder="Ex.: bi bi-grid" required>
                             </div>
                             <div class="col-12 col-md-6">
-                                <label for="menuRoute" class="form-label">Destino</label>
+                                <label for="menuRoute" class="form-label">Rota</label>
                                 <input id="menuRoute" v-model.trim="menu.route" class="form-control" type="text"
                                     placeholder="Ex.: /admin/menus" required>
                             </div>
