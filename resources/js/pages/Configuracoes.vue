@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'COnfiguracoes',
+  name: 'CCnfiguracoes',
   data() {
     return {
       msg: 'Hello Vue 2!'

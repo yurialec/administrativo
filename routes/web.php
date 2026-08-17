@@ -38,6 +38,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('roles')->group(function () {
             Route::get('/list', [RoleController::class, 'index'])->name('roles.index');
+            Route::get('/dropdown-list', [RoleController::class, 'dropdownList']);
+            Route::post('/store', [RoleController::class, 'store']);
+            Route::get('/find/{id}', [RoleController::class, 'show'])->whereNumber('id')->name('menus.show');
+            Route::put('/update/{id}', [RoleController::class, 'update'])->whereNumber('id')->name('menus.update');
         });
     });
 

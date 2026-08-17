@@ -42,6 +42,12 @@ const routes = [
         name: 'admin.roles.create',
         component: () => import('./pages/CreateRole.vue')
     },
+    {
+        path: '/admin/roles/edit/:id',
+        name: 'admin.roles.edit',
+        component: () => import('./pages/EditRole.vue'),
+        props: true
+    },
     // {
     //     path: '/admin/permissoes',
     //     name: 'admin.permissoes',

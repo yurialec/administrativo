@@ -53,35 +53,30 @@
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0 perfis-table">
                             <colgroup>
-                                <col class="perfis-table-id">
                                 <col class="perfis-table-role">
                                 <col class="perfis-table-description">
                                 <col class="perfis-table-status">
-                                <col class="perfis-table-level">
+                                <col class="perfis-table-parent">
                                 <col class="perfis-table-actions">
                             </colgroup>
                             <thead class="table-light">
                                 <tr>
-                                    <th class="text-nowrap" scope="col">#</th>
-                                    <th scope="col">Perfil</th>
-                                    <th scope="col">Descricao</th>
-                                    <th class="text-center" scope="col">Status</th>
-                                    <th class="text-end" scope="col">Nivel</th>
-                                    <th class="text-center" scope="col"></th>
+                                    <th scope="col">Nome</th>
+                                    <th scope="col">Descrição</th>
+                                    <th class="text-center" scope="col">Ativo</th>
+                                    <th scope="col">Perfil pai</th>
+                                    <th class="text-end" scope="col">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-if="filteredRoles.length === 0">
-                                    <td class="text-center text-muted py-5" colspan="6">
+                                    <td class="text-center text-muted py-5" colspan="5">
                                         <i class="bi bi-inbox fs-2 d-block mb-2"></i>
                                         Nenhum perfil encontrado
                                     </td>
                                 </tr>
                                 <tr v-for="role in paginatedRoles" :key="role.id">
-                                    <th class="text-muted fw-normal text-nowrap" scope="row">
-                                        {{ role.id }}
-                                    </th>
-                                    <td class="role-name-cell">
+                                    <th class="role-name-cell" scope="row">
                                         <div class="role-name-content d-flex align-items-center gap-2"
                                             :style="{ paddingLeft: `${role.depth * 1.25}rem` }">
                                             <button v-if="role.hasChildren"
@@ -96,7 +91,7 @@
                                             <i v-if="role.depth" class="bi bi-arrow-return-right text-muted"></i>
                                             <span class="fw-semibold role-name-text">{{ role.name }}</span>
                                         </div>
-                                    </td>
+                                    </th>
                                     <td>
                                         <span class="role-description text-body-secondary">
                                             {{ displayValue(role.description) }}
@@ -107,20 +102,24 @@
                                             {{ statusLabel(role) }}
                                         </span>
                                     </td>
-                                    <td class="text-end fw-semibold">
-                                        {{ role.depth + 1 }}
+                                    <td>
+                                        <span v-if="role.parent_id" class="text-body-secondary">
+                                            {{ displayValue(role.parentName) }}
+                                            <small class="text-muted">(#{{ role.parent_id }})</small>
+                                        </span>
+                                        <span v-else class="text-muted">-</span>
                                     </td>
                                     <td class="text-end">
-                                        <div class="dropdown">
                                             <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                                Acoes
+                                                Ações
                                             </button>
-                                            <ul class="dropdown-menu">
+                                            <ul class="dropdown-menu dropdown-menu-end">
                                                 <li>
-                                                    <button class="dropdown-item" type="button">
+                                                    <router-link class="dropdown-item"
+                                                        :to="{ name: 'admin.roles.edit', params: { id: role.id } }">
                                                         Editar
-                                                    </button>
+                                                    </router-link>
                                                 </li>
                                                 <li>
                                                     <button class="dropdown-item" type="button">
@@ -128,7 +127,6 @@
                                                     </button>
                                                 </li>
                                             </ul>
-                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -155,52 +153,7 @@ export default {
             filter: {
                 term: '',
             },
-            roles: [
-                {
-                    id: 1,
-                    name: 'Administrador',
-                    description: 'Acesso completo ao painel administrativo.',
-                    is_active: true,
-                    children: [
-                        {
-                            id: 2,
-                            name: 'Gestor de menus',
-                            description: 'Gerencia estrutura, ordem e exibicao dos menus.',
-                            is_active: true,
-                            children: []
-                        },
-                        {
-                            id: 3,
-                            name: 'Gestor de perfis',
-                            description: 'Gerencia perfis e vinculos hierarquicos.',
-                            is_active: true,
-                            children: []
-                        }
-                    ]
-                },
-                {
-                    id: 4,
-                    name: 'Operacional',
-                    description: 'Acesso as rotinas operacionais do sistema.',
-                    is_active: true,
-                    children: [
-                        {
-                            id: 5,
-                            name: 'Consulta',
-                            description: 'Visualiza registros e relatorios.',
-                            is_active: true,
-                            children: []
-                        },
-                        {
-                            id: 6,
-                            name: 'Atendimento',
-                            description: 'Executa cadastros e atualizacoes de rotina.',
-                            is_active: false,
-                            children: []
-                        }
-                    ]
-                }
-            ],
+            roles: [],
             paginatedRoles: [],
             collapsedRoleIds: []
         };
@@ -226,9 +179,22 @@ export default {
             });
         }
     },
+    mounted() {
+        this.search();
+    },
     methods: {
         search() {
-            this.isLoading = false;
+            this.isLoading = true;
+            axios.get(`/admin/roles/list`)
+                .then(response => {
+                   this.roles = response.data;
+                })
+                .catch(error => {
+                    alertDanger(error);
+                })
+                .finally(() => {
+                    this.isLoading = false;
+                });
         },
         clearFilters() {
             this.filter.term = '';
@@ -302,24 +268,20 @@ export default {
     min-width: 58rem;
 }
 
-.perfis-table-id {
-    width: 4.5rem;
-}
-
 .perfis-table-role {
-    width: 32%;
+    width: 30%;
 }
 
 .perfis-table-description {
-    width: 38%;
+    width: 40%;
 }
 
 .perfis-table-status {
     width: 7rem;
 }
 
-.perfis-table-level {
-    width: 6rem;
+.perfis-table-parent {
+    width: 16rem;
 }
 
 .perfis-table-actions {
