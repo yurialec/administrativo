@@ -27701,7 +27701,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./router */ "./resources/js/router.js");
+/* harmony import */ var _router_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./router/index.js */ "./resources/js/router/index.js");
 /* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./App.vue */ "./resources/js/App.vue");
 /* harmony import */ var _components_Loading_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Loading.vue */ "./resources/js/components/Loading.vue");
 /* harmony import */ var _components_Pagination_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/Pagination.vue */ "./resources/js/components/Pagination.vue");
@@ -27719,7 +27719,7 @@ var app = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createApp)(_App_vue__WEBPACK_IMPOR
 app.component('Loading', _components_Loading_vue__WEBPACK_IMPORTED_MODULE_3__["default"]);
 app.component('Pagination', _components_Pagination_vue__WEBPACK_IMPORTED_MODULE_4__["default"]);
 (0,_plugins_alerts_js__WEBPACK_IMPORTED_MODULE_5__.registerAlerts)(app);
-app.use(_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
+app.use(_router_index_js__WEBPACK_IMPORTED_MODULE_1__["default"]);
 app.use(_plugins_sweet_alert_js__WEBPACK_IMPORTED_MODULE_6__["default"]);
 app.mount('#app');
 
@@ -27892,10 +27892,36 @@ var SweetAlertPlugin = {
 
 /***/ }),
 
-/***/ "./resources/js/router.js":
-/*!********************************!*\
-  !*** ./resources/js/router.js ***!
-  \********************************/
+/***/ "./resources/js/router/admin.js":
+/*!**************************************!*\
+  !*** ./resources/js/router/admin.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _pages_Dashboard_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../pages/Dashboard.vue */ "./resources/js/pages/Dashboard.vue");
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ([{
+  path: '/admin/dashboard',
+  name: 'admin.dashboard',
+  component: _pages_Dashboard_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+}, {
+  path: '/admin',
+  redirect: {
+    name: 'admin.dashboard'
+  }
+}]);
+
+/***/ }),
+
+/***/ "./resources/js/router/index.js":
+/*!**************************************!*\
+  !*** ./resources/js/router/index.js ***!
+  \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -27904,74 +27930,92 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.mjs");
-/* harmony import */ var _pages_Dashboard_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./pages/Dashboard.vue */ "./resources/js/pages/Dashboard.vue");
-/* harmony import */ var _pages_Menus_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pages/Menus.vue */ "./resources/js/pages/Menus.vue");
-/* harmony import */ var _pages_Roles_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages/Roles.vue */ "./resources/js/pages/Roles.vue");
+/* harmony import */ var _admin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./admin */ "./resources/js/router/admin.js");
+/* harmony import */ var _menus__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menus */ "./resources/js/router/menus.js");
+/* harmony import */ var _roles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./roles */ "./resources/js/router/roles.js");
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 
 
 
 
-var routes = [{
-  path: '/admin',
-  name: 'admin.dashboard',
-  component: _pages_Dashboard_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
-}, {
+var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_3__.createRouter)({
+  history: (0,vue_router__WEBPACK_IMPORTED_MODULE_3__.createWebHistory)(),
+  routes: [].concat(_toConsumableArray(_admin__WEBPACK_IMPORTED_MODULE_0__["default"]), _toConsumableArray(_menus__WEBPACK_IMPORTED_MODULE_1__["default"]), _toConsumableArray(_roles__WEBPACK_IMPORTED_MODULE_2__["default"]))
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (router);
+
+/***/ }),
+
+/***/ "./resources/js/router/menus.js":
+/*!**************************************!*\
+  !*** ./resources/js/router/menus.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _pages_Menus_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../pages/Menus.vue */ "./resources/js/pages/Menus.vue");
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ([{
   path: '/admin/menus',
   name: 'admin.menus',
-  component: _pages_Menus_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
-}, {
-  path: '/admin/menus/:id',
-  name: 'admin.menus.show',
-  component: function component() {
-    return __webpack_require__.e(/*! import() */ "resources_js_pages_ShowMenu_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/ShowMenu.vue */ "./resources/js/pages/ShowMenu.vue"));
-  }
+  component: _pages_Menus_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
 }, {
   path: '/admin/menus/create',
   name: 'admin.menus.create',
   component: function component() {
-    return __webpack_require__.e(/*! import() */ "resources_js_pages_CreateMenu_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/CreateMenu.vue */ "./resources/js/pages/CreateMenu.vue"));
+    return __webpack_require__.e(/*! import() */ "resources_js_pages_CreateMenu_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../pages/CreateMenu.vue */ "./resources/js/pages/CreateMenu.vue"));
   }
 }, {
   path: '/admin/menus/edit/:id',
   name: 'admin.menus.edit',
   component: function component() {
-    return __webpack_require__.e(/*! import() */ "resources_js_pages_EditMenu_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/EditMenu.vue */ "./resources/js/pages/EditMenu.vue"));
+    return __webpack_require__.e(/*! import() */ "resources_js_pages_EditMenu_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../pages/EditMenu.vue */ "./resources/js/pages/EditMenu.vue"));
   },
   props: true
-}, {
+}]);
+
+/***/ }),
+
+/***/ "./resources/js/router/roles.js":
+/*!**************************************!*\
+  !*** ./resources/js/router/roles.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _pages_Roles_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../pages/Roles.vue */ "./resources/js/pages/Roles.vue");
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ([{
   path: '/admin/roles',
   name: 'admin.roles',
-  component: _pages_Roles_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+  component: _pages_Roles_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
 }, {
   path: '/admin/roles/create',
   name: 'admin.roles.create',
   component: function component() {
-    return __webpack_require__.e(/*! import() */ "resources_js_pages_CreateRole_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/CreateRole.vue */ "./resources/js/pages/CreateRole.vue"));
+    return __webpack_require__.e(/*! import() */ "resources_js_pages_CreateRole_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../pages/CreateRole.vue */ "./resources/js/pages/CreateRole.vue"));
   }
 }, {
   path: '/admin/roles/edit/:id',
   name: 'admin.roles.edit',
   component: function component() {
-    return __webpack_require__.e(/*! import() */ "resources_js_pages_EditRole_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/EditRole.vue */ "./resources/js/pages/EditRole.vue"));
+    return __webpack_require__.e(/*! import() */ "resources_js_pages_EditRole_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../pages/EditRole.vue */ "./resources/js/pages/EditRole.vue"));
   },
   props: true
-}
-// {
-//     path: '/admin/permissoes',
-//     name: 'admin.permissoes',
-//     component: Permissoes
-// },
-// {
-//     path: '/admin/usuarios',
-//     name: 'admin.usuarios',
-//     component: Usuarios
-// },
-];
-var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_3__.createRouter)({
-  history: (0,vue_router__WEBPACK_IMPORTED_MODULE_3__.createWebHistory)(),
-  routes: routes
-});
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (router);
+}]);
 
 /***/ }),
 
@@ -72706,7 +72750,7 @@ function useRoute(_name) {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_pages_ShowMenu_vue":1,"resources_js_pages_CreateMenu_vue":1,"resources_js_pages_EditMenu_vue":1,"resources_js_pages_CreateRole_vue":1,"resources_js_pages_EditRole_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_pages_CreateMenu_vue":1,"resources_js_pages_EditMenu_vue":1,"resources_js_pages_CreateRole_vue":1,"resources_js_pages_EditRole_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};
