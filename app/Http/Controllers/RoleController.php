@@ -50,7 +50,12 @@ class RoleController extends Controller
     public function update(UpdateRoleRequest $request, $id)
     {
         $role = $this->roleService->update($request->validated(), $id);
+        return response()->json($role);
+    }
 
+    public function delete($id)
+    {
+        $role = $this->roleService->delete($id);
         return response()->json($role);
     }
 }

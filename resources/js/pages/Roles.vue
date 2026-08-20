@@ -110,23 +110,24 @@
                                         <span v-else class="text-muted">-</span>
                                     </td>
                                     <td class="text-end">
-                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                Ações
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <router-link class="dropdown-item"
-                                                        :to="{ name: 'admin.roles.edit', params: { id: role.id } }">
-                                                        Editar
-                                                    </router-link>
-                                                </li>
-                                                <li>
-                                                    <button class="dropdown-item" type="button">
-                                                        Excluir
-                                                    </button>
-                                                </li>
-                                            </ul>
+                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            Ações
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <router-link class="dropdown-item"
+                                                    :to="{ name: 'admin.roles.edit', params: { id: role.id } }">
+                                                    Editar
+                                                </router-link>
+                                            </li>
+                                            <li>
+                                                <button class="dropdown-item" type="button"
+                                                    @click="deleteRole(role.id)">
+                                                    Excluir
+                                                </button>
+                                            </li>
+                                        </ul>
                                     </td>
                                 </tr>
                             </tbody>
@@ -187,7 +188,7 @@ export default {
             this.isLoading = true;
             axios.get(`/admin/roles/list`)
                 .then(response => {
-                   this.roles = response.data;
+                    this.roles = response.data;
                 })
                 .catch(error => {
                     alertDanger(error);
@@ -253,6 +254,26 @@ export default {
         },
         statusLabel(role) {
             return role.is_active ? 'Ativo' : 'Inativo';
+        },
+        deleteRole(id) {
+            if (!id) {
+                return;
+            }
+
+            this.confirm('', 'Deseja excluir este perfil?').then(() => {
+                this.isLoading = true;
+                axios.delete(`/admin/roles/delete/${id}`)
+                    .then(response => {
+                        alertSuccess('Registro excluido com sucesso!');
+                        this.search();
+                    })
+                    .catch(error => {
+                        alertDanger(error);
+                    })
+                    .finally(() => {
+                        this.isLoading = false;
+                    });
+            });
         }
     }
 };

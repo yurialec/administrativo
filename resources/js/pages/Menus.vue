@@ -288,8 +288,7 @@ export default {
                 return;
             }
             
-            this.confirm('Essa ação não poderá ser desfeita.',
-                'Deseja excluir este item?').then(() => {
+            this.confirm('Essa ação não poderá ser desfeita.', 'Deseja excluir este item?').then(() => {
                     this.isLoading = true;
                     axios.delete(`/admin/menus/${menuId}`)
                         .then(response => {
@@ -302,7 +301,7 @@ export default {
                         .finally(() => {
                             this.isLoading = false;
                         });
-                });
+            });
         },
         changeMenuOrder(menuId) {
             if (!menuId) {

@@ -40,8 +40,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/list', [RoleController::class, 'index'])->name('roles.index');
             Route::get('/dropdown-list', [RoleController::class, 'dropdownList']);
             Route::post('/store', [RoleController::class, 'store']);
-            Route::get('/find/{id}', [RoleController::class, 'show'])->whereNumber('id')->name('menus.show');
-            Route::put('/update/{id}', [RoleController::class, 'update'])->whereNumber('id')->name('menus.update');
+            Route::get('/find/{id}', [RoleController::class, 'show'])->whereNumber('id')->name('roles.show');
+            Route::put('/update/{id}', [RoleController::class, 'update'])->whereNumber('id')->name('roles.update');
+            Route::delete('/delete/{id}', [RoleController::class, 'delete'])->whereNumber('id')->name('roles.delete');
         });
     });
 

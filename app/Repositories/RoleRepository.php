@@ -67,43 +67,4 @@ class RoleRepository
 
         return $role;
     }
-
-    public function deleteChildrenExcept(Role $parent, array $ids): void
-    {
-        $parent->children()
-            ->when(!empty($ids), function ($query) use ($ids) {
-                $query->whereNotIn('id', $ids);
-            })
-            ->delete();
-    }
-
-    public function createChild(Role $parent, array $data)
-    {
-        return $parent->children()->create($data);
-    }
-
-    public function appendToParent(Role $child, Role $parent)
-    {
-        $child->appendToNode($parent)->save();
-
-        return $child;
-    }
-
-    public function findByParentAndOrder($parentId, $order)
-    {
-        return $this->role
-            ->query()
-            ->where('parent_id', $parentId)
-            ->where('order', $order)
-            ->first();
-    }
-
-    public function treeFromMenu($id)
-    {
-        return $this->role
-            ->defaultOrder()
-            ->descendantsAndSelf($id)
-            ->toTree()
-            ->first();
-    }
 }
