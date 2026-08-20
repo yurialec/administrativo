@@ -23,6 +23,12 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+const sanctumToken = window.localStorage.getItem('sanctum_token');
+
+if (sanctumToken) {
+    window.axios.defaults.headers.common.Authorization = `Bearer ${sanctumToken}`;
+}
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

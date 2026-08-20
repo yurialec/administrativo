@@ -1,6 +1,6 @@
 <template>
     <nav class="sb-topnav navbar navbar-expand navbar-light bg-light shadow fixed-top">
-        <router-link class="navbar-brand ps-3" to="/admin">
+        <router-link class="navbar-brand ps-3" to="/">
             Administrativo
         </router-link>
 

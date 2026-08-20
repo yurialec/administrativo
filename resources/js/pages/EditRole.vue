@@ -6,7 +6,7 @@
             <h1 class="h4 mb-0">Editar Perfil</h1>
             <router-link
                 class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2 align-self-start align-self-lg-auto"
-                to="/admin/roles">
+                to="/roles">
                 <i class="bi bi-arrow-left"></i>
                 <span>Voltar</span>
             </router-link>
@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
-                            <router-link class="btn btn-outline-secondary btn-sm" to="/admin/roles">
+                            <router-link class="btn btn-outline-secondary btn-sm" to="/roles">
                                 Cancelar
                             </router-link>
                             <button class="btn btn-primary btn-sm text-white" type="submit" :disabled="isLoading">
@@ -101,8 +101,8 @@ export default {
 
             try {
                 const [roleResponse, rolesResponse] = await Promise.all([
-                    axios.get(`/admin/roles/find/${this.id}`),
-                    axios.get('/admin/roles/dropdown-list')
+                    axios.get(`/api/roles/find/${this.id}`),
+                    axios.get('/api/roles/dropdown-list')
                 ]);
 
                 const role = Array.isArray(roleResponse.data)
@@ -121,9 +121,9 @@ export default {
             this.isLoading = true;
 
             try {
-                await axios.put(`/admin/roles/update/${this.id}`, this.createRequestPayload());
+                await axios.put(`/api/roles/update/${this.id}`, this.createRequestPayload());
                 alertSuccess('Perfil alterado com sucesso!');
-                this.$router.push({ name: 'admin.roles' });
+                this.$router.push({ name: 'roles' });
             } catch (error) {
                 alertDanger(error);
             } finally {

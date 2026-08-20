@@ -36,7 +36,7 @@ export default {
     methods: {
         async loadSidebar() {
             try {
-                const response = await axios.get('/sidebar');
+                const response = await axios.get('/api/sidebar');
                 this.menus = Array.isArray(response.data)
                     ? response.data
                     : response.data.menus || [];

@@ -7,7 +7,7 @@
             </div>
             <router-link
                 class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2 align-self-start align-self-lg-auto text-white"
-                to="/admin/roles/create">
+                to="/roles/create">
                 <i class="bi bi-plus"></i><span>Cadastrar</span>
             </router-link>
         </div>
@@ -117,7 +117,7 @@
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
                                                 <router-link class="dropdown-item"
-                                                    :to="{ name: 'admin.roles.edit', params: { id: role.id } }">
+                                                    :to="{ name: 'roles.edit', params: { id: role.id } }">
                                                     Editar
                                                 </router-link>
                                             </li>
@@ -186,7 +186,7 @@ export default {
     methods: {
         search() {
             this.isLoading = true;
-            axios.get(`/admin/roles/list`)
+            axios.get(`/api/roles/list`)
                 .then(response => {
                     this.roles = response.data;
                 })
@@ -262,7 +262,7 @@ export default {
 
             this.confirm('', 'Deseja excluir este perfil?').then(() => {
                 this.isLoading = true;
-                axios.delete(`/admin/roles/delete/${id}`)
+                axios.delete(`/api/roles/delete/${id}`)
                     .then(response => {
                         alertSuccess('Registro excluido com sucesso!');
                         this.search();

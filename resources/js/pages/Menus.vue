@@ -7,7 +7,7 @@
             </div>
             <router-link
                 class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2 align-self-start align-self-lg-auto text-white"
-                to="/admin/menus/create">
+                to="/menus/create">
                 <i class="bi bi-plus"></i><span>Cadastrar</span>
             </router-link>
         </div>
@@ -139,7 +139,7 @@
                                             <ul class="dropdown-menu">
                                                 <li>
                                                     <router-link class="dropdown-item"
-                                                        :to="{ name: 'admin.menus.edit', params: { id: menu.id } }">
+                                                        :to="{ name: 'menus.edit', params: { id: menu.id } }">
                                                         Editar
                                                     </router-link>
                                                 </li>
@@ -211,7 +211,7 @@ export default {
             this.isLoading = true;
 
             try {
-                const response = await axios.get('/admin/menus/list');
+                const response = await axios.get('/api/menus/list');
                 this.menus = Array.isArray(response.data)
                     ? response.data
                     : response.data.menus || [];
@@ -290,7 +290,7 @@ export default {
             
             this.confirm('Essa ação não poderá ser desfeita.', 'Deseja excluir este item?').then(() => {
                     this.isLoading = true;
-                    axios.delete(`/admin/menus/${menuId}`)
+                    axios.delete(`/api/menus/${menuId}`)
                         .then(response => {
                             alertSuccess('Registro Excluido com sucesso!');
                             this.search();
@@ -309,7 +309,7 @@ export default {
             }
 
             this.isLoading = true;
-            axios.post(`/admin/menus/change-menu-order/${menuId}`)
+            axios.post(`/api/menus/change-menu-order/${menuId}`)
                 .then(response => {
                     this.search();
                 })

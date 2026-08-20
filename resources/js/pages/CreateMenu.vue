@@ -8,7 +8,7 @@
             </div>
             <router-link
                 class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2 align-self-start align-self-lg-auto"
-                to="/admin/menus">
+                to="/menus">
                 <i class="bi bi-arrow-left"></i>
                 <span>Voltar</span>
             </router-link>
@@ -35,7 +35,7 @@
                             <div class="col-12 col-md-6">
                                 <label for="menuRoute" class="form-label">Destino</label>
                                 <input id="menuRoute" v-model.trim="menu.route" class="form-control" type="text"
-                                    placeholder="Ex.: /admin/menus" required>
+                                    placeholder="Ex.: /menus" required>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label for="menuParent" class="form-label">Menu pai</label>
@@ -92,7 +92,7 @@
                                     <div class="col-12">
                                         <label :for="`childRoute-${index}`" class="form-label">Destino</label>
                                         <input :id="`childRoute-${index}`" v-model.trim="child.route"
-                                            class="form-control" type="text" placeholder="Ex.: /admin/exemplo"
+                                            class="form-control" type="text" placeholder="Ex.: /exemplo"
                                             required>
                                     </div>
                                 </div>
@@ -106,7 +106,7 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body d-flex flex-column flex-sm-row justify-content-end gap-2">
                         <router-link class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center justify-content-center gap-2"
-                            to="/admin/menus">
+                            to="/menus">
                             <i class="bi bi-x-lg"></i>
                             <span>Cancelar</span>
                         </router-link>
@@ -156,7 +156,7 @@ export default {
             this.isLoading = true;
 
             try {
-                const response = await axios.post('/admin/menus/store', this.createRequestPayload());
+                const response = await axios.post('/api/menus/store', this.createRequestPayload());
                 alertSuccess('Menu cadastrado com sucesso!');
             } catch (error) {
                 alertDanger(error);
@@ -168,7 +168,7 @@ export default {
             this.isLoading = true;
 
             try {
-                const response = await axios.get('/admin/menus/list-to-create');
+                const response = await axios.get('/api/menus/list-to-create');
                 this.menus = Array.isArray(response.data) ? response.data : [];
             } catch (error) {
                 this.menus = [];

@@ -69,7 +69,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _this2.isLoading = true;
               _context.p = 1;
               _context.n = 2;
-              return Promise.all([axios.get("/admin/roles/find/".concat(_this2.id)), axios.get('/admin/roles/dropdown-list')]);
+              return Promise.all([axios.get("/api/roles/find/".concat(_this2.id)), axios.get('/api/roles/dropdown-list')]);
             case 2:
               _yield$Promise$all = _context.v;
               _yield$Promise$all2 = _slicedToArray(_yield$Promise$all, 2);
@@ -104,11 +104,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _this3.isLoading = true;
               _context2.p = 1;
               _context2.n = 2;
-              return axios.put("/admin/roles/update/".concat(_this3.id), _this3.createRequestPayload());
+              return axios.put("/api/roles/update/".concat(_this3.id), _this3.createRequestPayload());
             case 2:
               alertSuccess('Perfil alterado com sucesso!');
               _this3.$router.push({
-                name: 'admin.roles'
+                name: 'roles'
               });
               _context2.n = 4;
               break;
@@ -211,7 +211,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "h4 mb-0"
   }, "Editar Perfil", -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
     "class": "btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2 align-self-start align-self-lg-auto",
-    to: "/admin/roles"
+    to: "/roles"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return _toConsumableArray(_cache[5] || (_cache[5] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
@@ -279,7 +279,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "for": "roleIsActive"
   }, "Perfil ativo", -1 /* CACHED */))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
     "class": "btn btn-outline-secondary btn-sm",
-    to: "/admin/roles"
+    to: "/roles"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return _toConsumableArray(_cache[12] || (_cache[12] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Cancelar ", -1 /* CACHED */)]));

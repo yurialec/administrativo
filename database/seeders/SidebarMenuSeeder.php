@@ -18,7 +18,7 @@ class SidebarMenuSeeder extends Seeder
         DB::transaction(function () {
             SidebarMenu::updateOrCreate(
                 [
-                    'route' => '/admin',
+                    'route' => '/',
                     'parent_id' => null,
                 ],
                 [
@@ -36,8 +36,8 @@ class SidebarMenuSeeder extends Seeder
                 ],
                 [
                     'icon' => 'bi bi-gear',
-                    'route' => null,
-                    'url' => null,
+                    'route' => '#',
+                    'url' => '#',
                     'order' => 2,
                 ]
             );
@@ -46,28 +46,28 @@ class SidebarMenuSeeder extends Seeder
                 [
                     'title' => 'Menus',
                     'icon' => 'bi bi-list-ul',
-                    'route' => '/admin/menus',
+                    'route' => '/menus',
                     'url' => null,
                     'order' => 1,
                 ],
                 [
                     'title' => 'Perfis',
                     'icon' => 'bi bi-person-badge',
-                    'route' => '/admin/perfis',
+                    'route' => '/roles',
                     'url' => null,
                     'order' => 2,
                 ],
                 [
                     'title' => 'Permissões',
                     'icon' => 'bi bi-shield-lock',
-                    'route' => '/admin/permissoes',
+                    'route' => '/permissions',
                     'url' => null,
                     'order' => 3,
                 ],
                 [
                     'title' => 'Usuários',
                     'icon' => 'bi bi-people',
-                    'route' => '/admin/usuarios',
+                    'route' => '/users',
                     'url' => null,
                     'order' => 4,
                 ],

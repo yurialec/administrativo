@@ -53,8 +53,9 @@ export default {
             this.isSidebarToggled = !this.isSidebarToggled;
         },
         logout() {
-            axios.post('/logout')
+            axios.post('/api/logout')
                 .then(response => {
+                    window.localStorage.removeItem('sanctum_token');
                     location.reload();
                 }).catch(error => {
                     window.alert(error);

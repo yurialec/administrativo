@@ -30,7 +30,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     search: function search() {
       var _this = this;
-      axios.get("/admin/roles/dropdown-list").then(function (response) {
+      axios.get("/api/roles/dropdown-list").then(function (response) {
         _this.roles = response.data;
       })["catch"](function (error) {
         alertDanger(error);
@@ -40,7 +40,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     store: function store() {
       var _this2 = this;
-      axios.post("/admin/roles/store", this.role).then(function (response) {
+      axios.post("/api/roles/store", this.role).then(function (response) {
         alertSuccess('Menu cadastrado com sucesso!');
       })["catch"](function (error) {
         alertDanger(error);
@@ -110,7 +110,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "h4 mb-0"
   }, "Cadastrar Novo Perfil")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
     "class": "btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2 align-self-start align-self-lg-auto",
-    to: "/admin/roles"
+    to: "/roles"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return _toConsumableArray(_cache[4] || (_cache[4] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {

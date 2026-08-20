@@ -62,7 +62,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _this.isLoading = true;
               _context.p = 2;
               _context.n = 3;
-              return axios.post('/admin/menus/store', _this.createRequestPayload());
+              return axios.post('/api/menus/store', _this.createRequestPayload());
             case 3:
               response = _context.v;
               alertSuccess('Menu cadastrado com sucesso!');
@@ -92,7 +92,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _this2.isLoading = true;
               _context2.p = 1;
               _context2.n = 2;
-              return axios.get('/admin/menus/list-to-create');
+              return axios.get('/api/menus/list-to-create');
             case 2:
               response = _context2.v;
               _this2.menus = Array.isArray(response.data) ? response.data : [];
@@ -254,7 +254,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "h4 mb-0"
   }, "Cadastrar Menu")], -1 /* CACHED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
     "class": "btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2 align-self-start align-self-lg-auto",
-    to: "/admin/menus"
+    to: "/menus"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return _toConsumableArray(_cache[6] || (_cache[6] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
@@ -309,7 +309,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     "class": "form-control",
     type: "text",
-    placeholder: "Ex.: /admin/menus",
+    placeholder: "Ex.: /menus",
     required: ""
   }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.menu.route, void 0, {
     trim: true
@@ -393,14 +393,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       },
       "class": "form-control",
       type: "text",
-      placeholder: "Ex.: /admin/exemplo",
+      placeholder: "Ex.: /exemplo",
       required: ""
     }, null, 8 /* PROPS */, _hoisted_32), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, child.route, void 0, {
       trim: true
     }]])])])]);
   }), 128 /* KEYED_FRAGMENT */))]))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
     "class": "btn btn-outline-secondary btn-sm d-inline-flex align-items-center justify-content-center gap-2",
-    to: "/admin/menus"
+    to: "/menus"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return _toConsumableArray(_cache[17] || (_cache[17] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {

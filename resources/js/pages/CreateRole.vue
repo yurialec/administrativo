@@ -7,7 +7,7 @@
             </div>
             <router-link
                 class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2 align-self-start align-self-lg-auto"
-                to="/admin/roles">
+                to="/roles">
                 <i class="bi bi-arrow-left"></i>
                 <span>Voltar</span>
             </router-link>
@@ -71,7 +71,7 @@ export default {
     },
     methods: {
         search() {
-            axios.get(`/admin/roles/dropdown-list`)
+            axios.get(`/api/roles/dropdown-list`)
                 .then(response => {
                     this.roles = response.data;
                 })
@@ -83,7 +83,7 @@ export default {
                 });
         },
         store() {
-            axios.post(`/admin/roles/store`, this.role)
+            axios.post(`/api/roles/store`, this.role)
                 .then(response => {
                     alertSuccess('Menu cadastrado com sucesso!');
                 })
