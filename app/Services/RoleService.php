@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\SidebarMenu;
 use App\Repositories\RoleRepository;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class RoleService
@@ -22,7 +20,7 @@ class RoleService
         try {
             return $this->roleRepository->all();
         } catch (\Throwable $e) {
-            Log::error('Erro ao carregar sidebar menus', [
+            Log::error('Erro ao carregar perfis', [
                 'message' => $e->getMessage(),
             ]);
             return collect();
@@ -48,7 +46,7 @@ class RoleService
         } catch (\Throwable $e) {
             Log::error('Erro ao buscar perfil', [
                 'message' => $e->getMessage(),
-                'role_id' => $id,
+                'id' => $id,
             ]);
             return null;
         }
@@ -75,9 +73,9 @@ class RoleService
             $deleted = $this->roleRepository->delete($id);
             return $deleted;
         } catch (\Throwable $e) {
-            Log::error('Erro ao excluir menu', [
+            Log::error('Erro ao excluir perfil', [
                 'message' => $e->getMessage(),
-                'menu_id' => $id,
+                'id' => $id,
             ]);
             return null;
         }
@@ -90,7 +88,7 @@ class RoleService
         } catch (\Throwable $e) {
             Log::error('Erro ao editar perfil.', [
                 'message' => $e->getMessage(),
-                'role_id' => $id,
+                'id' => $id,
             ]);
 
             return null;

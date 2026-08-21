@@ -39,11 +39,6 @@ class RoleRepository
             ->find($id);
     }
 
-    public function findOrFail($id)
-    {
-        return $this->role->findOrFail($id);
-    }
-
     public function create(array $data)
     {
         return $this->role->create($data);
@@ -56,7 +51,7 @@ class RoleRepository
 
     public function update($data, $id)
     {
-        $role = $this->findOrFail($id);
+        $role = $this->find($id);
 
         return $this->updateModel($role, $data);
     }
