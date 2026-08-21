@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,5 +43,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/find/{id}', [RoleController::class, 'show'])->whereNumber('id')->name('roles.show');
         Route::put('/update/{id}', [RoleController::class, 'update'])->whereNumber('id')->name('roles.update');
         Route::delete('/delete/{id}', [RoleController::class, 'delete'])->whereNumber('id')->name('roles.delete');
+    });
+
+    Route::prefix('permissions')->group(function () {
+        Route::get('/list', [PermissionController::class, 'index'])->name('permissions.index');
+        Route::post('/store', [PermissionController::class, 'store'])->name('permissions.store');
+        Route::get('/find/{id}', [PermissionController::class, 'show'])->whereNumber('id')->name('permissions.show');
+        Route::put('/update/{id}', [PermissionController::class, 'update'])->whereNumber('id')->name('permissions.update');
+        Route::delete('/delete/{id}', [PermissionController::class, 'destroy'])->whereNumber('id')->name('permissions.delete');
     });
 });

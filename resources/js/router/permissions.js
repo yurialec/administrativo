@@ -6,15 +6,15 @@ export default [
         name: 'permissions',
         component: Permissions
     },
-    // {
-    //     path: '/permissions/create',
-    //     name: 'permissions.create',
-    //     component: () => import('../pages/CreatePermission.vue')
-    // },
-    // {
-    //     path: '/permissions/edit/:id',
-    //     name: 'permissions.edit',
-    //     component: () => import('../pages/EditPermission.vue'),
-    //     props: true
-    // }
+    {
+        path: '/permissions/create',
+        name: 'permissions.create',
+        component: () => import('../pages/CreatePermission.vue')
+    },
+    {
+        path: '/permissions/edit/:id',
+        name: 'permissions.edit',
+        component: () => import('../pages/EditPermission.vue'),
+        props: true
+    }
 ];

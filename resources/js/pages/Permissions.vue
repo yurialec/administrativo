@@ -7,7 +7,7 @@
             </div>
             <router-link
                 class="btn btn-primary btn-sm d-inline-flex align-items-center gap-2 align-self-start align-self-lg-auto text-white"
-                to="/permissions/create">
+                :to="{ name: 'permissions.create' }">
                 <i class="bi bi-plus"></i><span>Cadastrar</span>
             </router-link>
         </div>
@@ -18,31 +18,29 @@
                         <h2 class="h6 mb-0">Filtros</h2>
                     </div>
                     <div class="card-body">
-                        <form class="vstack gap-3" @submit.prevent="search">
-                            <div>
-                                <div class="input-group input-group-sm">
-                                    <span class="input-group-text">
-                                        <i class="bi bi-search"></i>
-                                    </span>
-                                    <input v-model.trim="filter.name" class="form-control" type="text"
-                                        placeholder="Nome da permissão" />
-                                </div>
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button
-                                    class="btn btn-primary btn-sm d-inline-flex align-items-center justify-content-center gap-2 text-white"
-                                    type="submit" :disabled="isLoading">
+                        <div class="mb-3">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text">
                                     <i class="bi bi-search"></i>
-                                    <span>Pesquisar</span>
-                                </button>
-                                <button
-                                    class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center justify-content-center gap-2"
-                                    type="button">
-                                    <i class="bi bi-x-lg"></i>
-                                    <span>Limpar filtros</span>
-                                </button>
+                                </span>
+                                <input id="menu-title-filter" v-model.trim="filter.name" class="form-control"
+                                    type="text" placeholder="Nome">
                             </div>
-                        </form>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button
+                                class="btn btn-primary btn-sm d-inline-flex align-items-center justify-content-center gap-2 text-white"
+                                @click="searchFilter">
+                                <i class="bi bi-search"></i>
+                                <span>Pesquisar</span>
+                            </button>
+                            <button
+                                class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center justify-content-center gap-2"
+                                type="button" @click="clearFilters">
+                                <i class="bi bi-x-lg"></i>
+                                <span>Limpar filtros</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -55,20 +53,22 @@
                                     <th class="text-nowrap" scope="col">#</th>
                                     <th scope="col">Nome</th>
                                     <th scope="col">slug</th>
+                                    <th scope="col">Descrição</th>
                                     <th class="text-center" scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- <tr>
+                                <tr v-if="paginatedPermissions.length === 0 && this.isLoading === false">
                                     <td class="text-center text-muted py-5" colspan="7">
                                         <i class="bi bi-inbox fs-2 d-block mb-2"></i>
                                         Nenhum resultado encontrado
                                     </td>
-                                </tr> -->
-                                <tr>
-                                    <td>123</td>
-                                    <td>Menus</td>
-                                    <td>menus</td>
+                                </tr>
+                                <tr v-for="permission in paginatedPermissions" :key="permission.id">
+                                    <td>{{ permission.id }}</td>
+                                    <td>{{ permission.name }}</td>
+                                    <td>{{ permission.slug }}</td>
+                                    <td>{{ permission.description }}</td>
                                     <td class="text-end">
                                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -77,12 +77,12 @@
                                         <ul class="dropdown-menu">
                                             <li>
                                                 <router-link class="dropdown-item"
-                                                    :to="{ name: 'permissions.edit', params: { id: 123 } }">
+                                                    :to="{ name: 'permissions.edit', params: { id: permission.id } }">
                                                     Editar
                                                 </router-link>
                                             </li>
                                             <li>
-                                                <button class="dropdown-item" @click="delete (123)">
+                                                <button class="dropdown-item" @click="deletePermission(permission.id)">
                                                     Excluir
                                                 </button>
                                             </li>
@@ -92,18 +92,18 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <!-- <div
+                    <div
                         class="card-footer bg-white d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
-                        <Pagination class="flex-grow-1" :permissions="permissions" :rows="10"
+                        <Pagination class="flex-grow-1" :response="permissions" :rows="10"
                             @page-change="setPaginatedPermissions" />
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 </template>
 <script>
+
 export default {
     name: 'Permissions',
     data() {
@@ -116,21 +116,49 @@ export default {
             paginatedPermissions: [],
         };
     },
+    mounted() {
+        this.search();
+    },
     methods: {
         search() {
-            // Implement search logic here
+            axios.get(`/api/permissions/list`)
+                .then(response => {
+                    this.permissions = response.data;
+                })
+                .catch(error => {
+                    alertDanger(error);
+                })
+                .finally(() => {
+                    this.isLoading = false;
+                });
         },
-        delete(id) {
-            // Implement delete logic here
+        searchFilter() {
+            this.paginatedPermissions = this.permissions.filter(permission => {
+                return permission.name.toLowerCase().includes(this.filter.name.toLowerCase());
+            });
         },
-        setPaginatedPermissions(page) {
-            // Implement pagination logic here
+        clearFilters() {
+            this.filter.name = '';
+            this.paginatedPermissions = this.permissions;
+        },
+        deletePermission(id) {
+            this.confirm('', 'Deseja excluir esta permissão?').then(() => {
+                axios.delete(`/api/permissions/delete/${id}`)
+                    .then(response => {
+                        alertSuccess('Permissão excluída com sucesso!');
+                        this.search();
+                    })
+                    .catch(error => {
+                        alertDanger(error);
+                    })
+                    .finally(() => {
+                        this.isLoading = false;
+                    });
+            });
+        },
+        setPaginatedPermissions(permissions) {
+            this.paginatedPermissions = permissions;
         },
     },
 }
 </script>
-<style>
-.page .card {
-    border-radius: 0.5rem;
-}
-</style>
