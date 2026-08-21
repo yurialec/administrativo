@@ -17,20 +17,16 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Nome</th>
-                            <th scope="col">Slug</th>
-                            <th scope="col">DescriÃ§Ã£o</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-if="paginated{{ classes }}.length === 0 && !isLoading">
-                            <td class="text-center text-muted py-5" colspan="5">Nenhum resultado encontrado</td>
+                            <td class="text-center text-muted py-5" colspan="3">Nenhum resultado encontrado</td>
                         </tr>
                         <tr v-for="{{ variable }} in paginated{{ classes }}" :key="{{ variable }}.id">
                             <td v-text="{{ variable }}.id"></td>
                             <td v-text="{{ variable }}.name"></td>
-                            <td v-text="{{ variable }}.slug"></td>
-                            <td v-text="{{ variable }}.description"></td>
                             <td class="text-end">
                                 <router-link class="btn btn-outline-primary btn-sm me-2"
                                     :to="{ name: '{{ route }}.edit', params: { id: {{ variable }}.id } }">

@@ -23,14 +23,6 @@
                                 <label class="form-label">Nome</label>
                                 <input v-model="{{ variable }}.name" class="form-control" type="text" required>
                             </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label">Slug</label>
-                                <input v-model="{{ variable }}.slug" class="form-control" type="text" required>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">DescriÃ§Ã£o</label>
-                                <textarea v-model="{{ variable }}.description" class="form-control" rows="3"></textarea>
-                            </div>
                         </div>
                         <div class="d-flex justify-content-end">
                             <button class="btn btn-primary btn-sm text-white" type="submit" :disabled="isLoading">
@@ -58,9 +50,7 @@ export default {
         return {
             isLoading: false,
             {{ variable }}: {
-                name: '',
-                slug: '',
-                description: ''
+                name: ''
             }
         };
     },
