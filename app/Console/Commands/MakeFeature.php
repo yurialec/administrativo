@@ -76,6 +76,17 @@ class MakeFeature extends Command
             return 1;
         }
 
+        $apiRoutesPath = base_path('routes/api.php');
+        $apiRoutes = $this->buildApiRoutes(
+            $apiRoutesPath,
+            $name,
+            $replacements['{{ route }}']
+        );
+
+        if ($apiRoutes === null) {
+            return 1;
+        }
+
         foreach ($files as $path => $stub) {
             $this->files->ensureDirectoryExists(dirname($path));
             $contents = $this->files->get(__DIR__."/stubs/{$stub}");
@@ -85,6 +96,9 @@ class MakeFeature extends Command
 
         $this->files->put($routerIndexPath, $routerIndex);
         $this->info('Atualizado: resources/js/router/index.js');
+
+        $this->files->put($apiRoutesPath, $apiRoutes);
+        $this->info('Atualizado: routes/api.php');
 
         $this->newLine();
         $this->comment("Feature {$name} criada com sucesso.");
@@ -129,5 +143,61 @@ class MakeFeature extends Command
         $start = $matches[2][1];
 
         return substr_replace($contents, $routes, $start, strlen($matches[2][0]));
+    }
+
+    private function buildApiRoutes($path, $name, $route)
+    {
+        if (! $this->files->exists($path)) {
+            $this->error('NÃ£o foi possÃ­vel registrar as rotas: routes/api.php nÃ£o existe.');
+            return null;
+        }
+
+        $contents = $this->files->get($path);
+        $controllerImport = "use App\\Http\\Controllers\\{$name}Controller;";
+        $routePrefix = "Route::prefix('{$route}')->group(function () {";
+
+        if (Str::contains($contents, $controllerImport) || Str::contains($contents, $routePrefix)) {
+            $this->error("As rotas de API para {$route} jÃ¡ estÃ£o registradas.");
+            return null;
+        }
+
+        $routeFacadeImport = 'use Illuminate\\Support\\Facades\\Route;';
+        $routeFacadePosition = strpos($contents, $routeFacadeImport);
+
+        if ($routeFacadePosition === false) {
+            $this->error('NÃ£o foi possÃ­vel localizar os imports em routes/api.php.');
+            return null;
+        }
+
+        $contents = substr_replace(
+            $contents,
+            $controllerImport.PHP_EOL,
+            $routeFacadePosition,
+            0
+        );
+
+        $middlewareEnd = strrpos($contents, '});');
+
+        if ($middlewareEnd === false) {
+            $this->error('NÃ£o foi possÃ­vel localizar o grupo auth:sanctum em routes/api.php.');
+            return null;
+        }
+
+        $routes = implode(PHP_EOL, [
+            "    Route::prefix('{$route}')->group(function () {",
+            "        Route::get('/list', [{$name}Controller::class, 'index'])->name('{$route}.index');",
+            "        Route::post('/store', [{$name}Controller::class, 'store'])->name('{$route}.store');",
+            "        Route::get('/find/{id}', [{$name}Controller::class, 'show'])->whereNumber('id')->name('{$route}.show');",
+            "        Route::put('/update/{id}', [{$name}Controller::class, 'update'])->whereNumber('id')->name('{$route}.update');",
+            "        Route::delete('/delete/{id}', [{$name}Controller::class, 'destroy'])->whereNumber('id')->name('{$route}.delete');",
+            '    });',
+        ]);
+
+        return substr_replace(
+            $contents,
+            $routes.PHP_EOL,
+            $middlewareEnd,
+            0
+        );
     }
 }
