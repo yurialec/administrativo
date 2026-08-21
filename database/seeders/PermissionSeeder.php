@@ -15,22 +15,22 @@ class PermissionSeeder extends Seeder
     {
         $permissions = [
             [
-                'name' => 'Menu',
+                'name' => 'Listar Menus',
                 'slug' => 'menus',
                 'description' => 'Permissão para listar todas os menus do sistema.',
             ],
             [
-                'name' => 'Perfil',
+                'name' => 'Listar Perfis',
                 'slug' => 'roles',
                 'description' => 'Permissão para listar todos os perfis do sistema.',
             ],
             [
-                'name' => 'Permissão',
+                'name' => 'Listar Permissões',
                 'slug' => 'permissions',
-                'description' => 'Permissão para editar uma permissão existente no sistema.',
+                'description' => 'Permissão para listar uma permissão existente no sistema.',
             ],
             [
-                'name' => 'Usuários',
+                'name' => 'Listar Usuários',
                 'slug' => 'users',
                 'description' => 'Permissão para listar todos os usuários do sistema.',
             ],
