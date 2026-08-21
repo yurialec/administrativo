@@ -4,6 +4,7 @@ import adminRoutes from './admin';
 import menuRoutes from './menus';
 import roleRoutes from './roles';
 import permissionRoutes from './permissions';
+import usersRoutes from './users';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -11,7 +12,8 @@ const router = createRouter({
         ...adminRoutes,
         ...menuRoutes,
         ...roleRoutes,
-        ...permissionRoutes
+        ...permissionRoutes,
+        ...usersRoutes
     ]
 });
 

@@ -54,9 +54,9 @@ export default {
         },
         logout() {
             axios.post('/api/logout')
-                .then(response => {
+                .then(() => {
                     window.localStorage.removeItem('sanctum_token');
-                    location.reload();
+                    window.location.assign('/login');
                 }).catch(error => {
                     window.alert(error);
                 });
