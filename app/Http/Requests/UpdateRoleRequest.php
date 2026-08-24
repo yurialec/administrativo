@@ -41,6 +41,8 @@ class UpdateRoleRequest extends FormRequest
                 'exists:roles,id',
                 Rule::notIn([$roleId]),
             ],
+            'permissions' => ['nullable', 'array'],
+            'permissions.*' => ['integer', 'exists:permissions,id'],
         ];
     }
 
@@ -60,6 +62,8 @@ class UpdateRoleRequest extends FormRequest
             'parent_id.integer' => 'O perfil pai informado é inválido.',
             'parent_id.exists' => 'O perfil pai selecionado não existe.',
             'parent_id.not_in' => 'Um perfil não pode ser definido como seu próprio pai.',
+            'permissions.array' => 'As permissões informadas são inválidas.',
+            'permissions.*.exists' => 'Uma das permissões selecionadas não existe.',
         ];
     }
 }

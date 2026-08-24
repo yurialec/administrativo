@@ -56,6 +56,7 @@
                                 <col class="perfis-table-description">
                                 <col class="perfis-table-status">
                                 <col class="perfis-table-parent">
+                                <col class="perfis-table-permissions">
                                 <col class="perfis-table-actions">
                             </colgroup>
                             <thead class="table-light">
@@ -64,14 +65,16 @@
                                     <th scope="col">Descrição</th>
                                     <th class="text-center" scope="col">Ativo</th>
                                     <th scope="col">Perfil pai</th>
+                                    <th scope="col">Permissões</th>
                                     <th class="text-end" scope="col">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-if="filteredRoles.length === 0">
-                                    <td class="text-center text-muted py-5" colspan="5">
+                                    <td class="text-center text-muted py-5" colspan="6">
                                         <i class="bi bi-inbox fs-2 d-block mb-2"></i>
-                                        Nenhum perfil encontrado
+                                        <span class="d-block fw-semibold">Nenhum perfil encontrado</span>
+                                        <small>Tente ajustar o termo de pesquisa.</small>
                                     </td>
                                 </tr>
                                 <tr v-for="role in paginatedRoles" :key="role.id">
@@ -108,10 +111,19 @@
                                         </span>
                                         <span v-else class="text-muted">-</span>
                                     </td>
+                                    <td class="permissions-cell">
+                                        <div v-if="role.permissions && role.permissions.length" class="d-flex flex-wrap gap-1">
+                                            <span v-for="permission in role.permissions" :key="permission.id"
+                                                class="badge permission-badge">
+                                                {{ permission.name }}
+                                            </span>
+                                        </div>
+                                        <span v-else class="text-muted small">Nenhuma</span>
+                                    </td>
                                     <td class="text-end">
-                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">
-                                            Ações
+                                            <i class="bi bi-three-dots-vertical me-1"></i>Ações
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
@@ -170,11 +182,16 @@ export default {
             }
 
             return this.flattenedRoles.filter(role => {
+                const permissionNames = Array.isArray(role.permissions)
+                    ? role.permissions.map(permission => permission.name)
+                    : [];
+
                 return [
                     role.id,
                     role.name,
                     role.description,
-                    role.parentName
+                    role.parentName,
+                    ...permissionNames
                 ].some(value => this.normalizeText(value).includes(term));
             });
         }
@@ -285,15 +302,17 @@ export default {
 
 .perfis-table {
     table-layout: fixed;
-    min-width: 58rem;
+    min-width: 70rem;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .perfis-table-role {
-    width: 30%;
+    width: 22%;
 }
 
 .perfis-table-description {
-    width: 40%;
+    width: 23%;
 }
 
 .perfis-table-status {
@@ -301,11 +320,51 @@ export default {
 }
 
 .perfis-table-parent {
-    width: 16rem;
+    width: 13rem;
+}
+
+.perfis-table-permissions {
+    width: 25%;
 }
 
 .perfis-table-actions {
-    width: 7rem;
+    width: 8rem;
+}
+
+.perfis-table thead th {
+    color: var(--bs-secondary-color);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.perfis-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.perfis-table tbody tr:hover {
+    --bs-table-hover-bg: rgba(var(--bs-primary-rgb), 0.05);
+}
+
+.perfis-table tbody td,
+.perfis-table tbody th {
+    border-bottom-color: var(--bs-border-color-translucent);
+}
+
+.permissions-cell {
+    vertical-align: middle;
+}
+
+.permission-badge {
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--bs-primary-text-emphasis);
+    background-color: var(--bs-primary-bg-subtle);
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .role-name-cell {

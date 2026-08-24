@@ -1,7 +1,5 @@
 <template>
     <section class="page">
-        <Loading :loading="isLoading" />
-
         <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
             <h1 class="h4 mb-0">Editar usuário</h1>
             <router-link class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
@@ -10,9 +8,9 @@
                 <span>Voltar</span>
             </router-link>
         </div>
-
         <div class="row g-4 justify-content-center">
             <div class="col-12 col-xl-4">
+                <Loading :loading="isLoading" />
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body bg-white">
                         <div class="row g-3 mb-3">
@@ -24,6 +22,17 @@
                                 <div class="col-12 col-md-12">
                                     <label class="form-label">Email</label>
                                     <input v-model="user.email" class="form-control" type="email" required>
+                                </div>
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-12 col-md-12">
+                                    <label class="form-label">Perfil</label>
+                                    <select v-model="user.role_id" class="form-select" required>
+                                        <option value="">Selecione um perfil</option>
+                                        <option v-for="role in roles" :key="role.id" :value="role.id">
+                                            {{ role.name }}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="row g-3 mb-3">
@@ -70,6 +79,7 @@ export default {
             user: {
                 name: '',
                 email: '',
+                role_id: '',
             },
             new_password: '',
             changePass: false,
@@ -77,6 +87,7 @@ export default {
     },
     mounted() {
         this.find();
+        this.searchRoles();
     },
     methods: {
         find() {
@@ -93,11 +104,23 @@ export default {
                     this.isLoading = false;
                 });
         },
+        searchRoles() {
+            axios.get(`/api/roles/list`)
+                .then(response => {
+                    this.roles = response.data;
+                })
+                .catch(error => {
+                    alertDanger(error);
+                })
+                .finally(() => {
+                    this.isLoading = false;
+                });
+        },
         update() {
 
             if (this.changePass) {
                 this.user.password = this.new_password;
-            }else{
+            } else {
                 delete this.user.password;
             }
 

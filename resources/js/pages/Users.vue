@@ -1,6 +1,6 @@
 <template>
     <section class="page">
-        <Loading :loading="isLoading" />
+
         <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
             <div>
                 <h1 class="h4 mb-0">Usuários</h1>
@@ -46,6 +46,7 @@
             </div>
             <div class="col-12 col-xl-10">
                 <div class="card border-0 shadow-sm">
+                    <Loading :loading="isLoading" />
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
@@ -53,17 +54,19 @@
                                     <th class="text-nowrap" scope="col">#</th>
                                     <th scope="col">Nome</th>
                                     <th scope="col">Email</th>
+                                    <th scope="col">Perfil</th>
                                     <th class="text-center" scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-if="paginatedUsers.length === 0 && !isLoading">
-                                    <td class="text-center text-muted py-5" colspan="3">Nenhum resultado encontrado</td>
+                                    <td class="text-center text-muted py-5" colspan="4">Nenhum resultado encontrado</td>
                                 </tr>
                                 <tr v-for="user in paginatedUsers" :key="user.id">
                                     <td v-text="user.id"></td>
                                     <td v-text="user.name"></td>
                                     <td v-text="user.email"></td>
+                                    <td v-text="user.role.name"></td>
                                     <td class="text-end">
                                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
                                             data-bs-toggle="dropdown" aria-expanded="false">

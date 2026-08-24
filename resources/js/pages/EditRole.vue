@@ -1,7 +1,5 @@
 <template>
     <section class="role-form-page">
-        <Loading :loading="isLoading" />
-
         <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
             <h1 class="h4 mb-0">Editar Perfil</h1>
             <router-link
@@ -11,8 +9,8 @@
                 <span>Voltar</span>
             </router-link>
         </div>
-
         <form class="row justify-content-center" @submit.prevent="update">
+            <Loading :loading="isLoading" />
             <div class="col-12 col-lg-10 col-xl-8">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
@@ -48,6 +46,32 @@
                                     <label class="form-check-label" for="roleIsActive">Perfil ativo</label>
                                 </div>
                             </div>
+
+                            <div class="col-12">
+                                <label for="rolePermissions" class="form-label">Permissões</label>
+                                <Multiselect
+                                    id="rolePermissions"
+                                    v-model="role.permissions"
+                                    :options="permissions"
+                                    :multiple="true"
+                                    :close-on-select="false"
+                                    :clear-on-select="false"
+                                    :preserve-search="true"
+                                    :hide-selected="true"
+                                    track-by="id"
+                                    label="name"
+                                    placeholder="Selecione uma ou mais permissões"
+                                    select-label="Selecionar"
+                                    selected-label="Selecionada"
+                                    deselect-label="Remover"
+                                    :show-no-options="false"
+                                    :disabled="isLoading"
+                                >
+                                    <template #noResult>
+                                        Nenhuma permissão encontrada.
+                                    </template>
+                                </Multiselect>
+                            </div>
                         </div>
 
                         <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
@@ -67,8 +91,14 @@
 </template>
 
 <script>
+import Multiselect from 'vue-multiselect';
+import 'vue-multiselect/dist/vue-multiselect.css';
+
 export default {
     name: 'EditRole',
+    components: {
+        Multiselect,
+    },
     props: {
         id: {
             type: [String, Number],
@@ -82,9 +112,11 @@ export default {
                 name: '',
                 description: '',
                 parent_id: '',
-                is_active: true
+                is_active: true,
+                permissions: []
             },
-            roles: []
+            roles: [],
+            permissions: []
         };
     },
     computed: {
@@ -100,9 +132,10 @@ export default {
             this.isLoading = true;
 
             try {
-                const [roleResponse, rolesResponse] = await Promise.all([
+                const [roleResponse, rolesResponse, permissionsResponse] = await Promise.all([
                     axios.get(`/api/roles/find/${this.id}`),
-                    axios.get('/api/roles/dropdown-list')
+                    axios.get('/api/roles/dropdown-list'),
+                    axios.get('/api/permissions/list')
                 ]);
 
                 const role = Array.isArray(roleResponse.data)
@@ -111,6 +144,7 @@ export default {
 
                 this.role = this.normalizeRole(role);
                 this.roles = Array.isArray(rolesResponse.data) ? rolesResponse.data : [];
+                this.permissions = Array.isArray(permissionsResponse.data) ? permissionsResponse.data : [];
             } catch (error) {
                 alertDanger(error);
             } finally {
@@ -137,13 +171,17 @@ export default {
                 name: normalizedRole.name || '',
                 description: normalizedRole.description || '',
                 parent_id: normalizedRole.parent_id || '',
-                is_active: Boolean(normalizedRole.is_active)
+                is_active: Boolean(normalizedRole.is_active),
+                permissions: Array.isArray(normalizedRole.permissions)
+                    ? normalizedRole.permissions
+                    : []
             };
         },
         createRequestPayload() {
             return {
                 ...this.role,
-                parent_id: this.role.parent_id || null
+                parent_id: this.role.parent_id || null,
+                permissions: this.role.permissions.map(permission => permission.id)
             };
         }
     }
@@ -153,5 +191,49 @@ export default {
 <style scoped>
 .role-form-page .card {
     border-radius: 0.5rem;
+}
+
+.multiselect {
+    min-height: 38px;
+    color: var(--bs-body-color);
+    font-size: 1rem;
+}
+
+.multiselect :deep(.multiselect__tags) {
+    min-height: 38px;
+    padding: 7px 40px 0 12px;
+    border-color: var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+}
+
+.multiselect :deep(.multiselect__placeholder),
+.multiselect :deep(.multiselect__single) {
+    margin: 0;
+    padding: 0;
+    line-height: 24px;
+}
+
+.multiselect :deep(.multiselect__input),
+.multiselect :deep(.multiselect__single) {
+    font-size: 1rem;
+}
+
+.multiselect :deep(.multiselect__tag) {
+    margin: 0 5px 5px 0;
+    padding: 5px 26px 5px 10px;
+    border-radius: 4px;
+    background: var(--bs-primary);
+}
+
+.multiselect :deep(.multiselect__option--highlight) {
+    background: var(--bs-primary);
+}
+
+.multiselect :deep(.multiselect__option--highlight::after) {
+    background: transparent;
+}
+
+.multiselect :deep(.multiselect__content-wrapper) {
+    border-color: var(--bs-border-color);
 }
 </style>

@@ -15,7 +15,11 @@ class UserRepository
 
     public function all()
     {
-        return $this->user->query()->get();
+        return $this->user
+            ->with(['role' => function ($query) {
+                $query->select('id', 'name');
+            }])
+            ->get();
     }
 
     public function find($id)

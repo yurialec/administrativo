@@ -16,7 +16,10 @@ class RoleRepository
     public function all()
     {
         return $this->role
-            ->query()
+            ->with(['permissions' => function ($query) {
+                $query->select('permissions.id', 'permissions.name');
+            }])
+            ->defaultOrder()
             ->get()
             ->toTree();
     }
@@ -36,17 +39,32 @@ class RoleRepository
     {
         return $this->role
             ->query()
+            ->with('permissions')
             ->find($id);
     }
 
     public function create(array $data)
     {
-        return $this->role->create($data);
+        $permissionIds = $data['permissions'] ?? [];
+        unset($data['permissions']);
+
+        $role = $this->role->create($data);
+        $role->permissions()->sync($permissionIds);
+
+        return $role->load('permissions');
     }
 
     public function delete($id)
     {
-        return $this->role->destroy($id);
+        $role = $this->find($id);
+
+        if (!$role) {
+            return 0;
+        }
+
+        $role->permissions()->detach();
+
+        return $role->delete();
     }
 
     public function update($data, $id)
@@ -58,8 +76,15 @@ class RoleRepository
 
     public function updateModel(Role $role, array $data)
     {
+        $permissionIds = $data['permissions'] ?? null;
+        unset($data['permissions']);
+
         $role->update($data);
 
-        return $role;
+        if ($permissionIds !== null) {
+            $role->permissions()->sync($permissionIds);
+        }
+
+        return $role->load('permissions');
     }
 }

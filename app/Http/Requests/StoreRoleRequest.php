@@ -27,6 +27,8 @@ class StoreRoleRequest extends FormRequest
             'name' => ['required', 'string', 'max:255', 'unique:roles,name'],
             'description' => ['nullable', 'string'],
             'parent_id' => ['nullable', 'integer', 'exists:roles,id'],
+            'permissions' => ['nullable', 'array'],
+            'permissions.*' => ['integer', 'exists:permissions,id'],
         ];
     }
 
@@ -44,6 +46,8 @@ class StoreRoleRequest extends FormRequest
             'description.string' => 'A descrição deve ser um texto.',
             'parent_id.integer' => 'O perfil pai informado é inválido.',
             'parent_id.exists' => 'O perfil pai selecionado não existe.',
+            'permissions.array' => 'As permissões informadas são inválidas.',
+            'permissions.*.exists' => 'Uma das permissões selecionadas não existe.',
         ];
     }
 }

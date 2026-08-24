@@ -72,7 +72,6 @@ onBeforeUnmount(restoreContainerPosition)
     position: absolute;
     inset: 0;
     z-index: 10;
-    background-color: rgba(0, 0, 0, 0.45);
     transition: opacity 0.5s ease;
     backdrop-filter: blur(2px);
     border-radius: inherit;
