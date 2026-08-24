@@ -1,6 +1,6 @@
 <template>
     <section class="page">
-        <Loading :loading="isLoading" fullscreen />
+        <Loading :loading="isLoading" />
 
         <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
             <h1 class="h4 mb-0">Editar usuário</h1>

@@ -1,6 +1,5 @@
 <template>
     <section class="perfis-page">
-        <Loading :loading="isLoading" fullscreen />
         <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
             <div>
                 <h1 class="h4 mb-0">Perfis</h1>
@@ -47,8 +46,8 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-12 col-xl-10">
+                <Loading :loading="isLoading" />
                 <div class="card border-0 shadow-sm">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0 perfis-table">
