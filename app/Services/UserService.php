@@ -30,7 +30,7 @@ class UserService
 
     public function update(array $data, $id)
     {
-        if ($data['password']) {
+        if (isset($data['password'])) {
             $data['password'] = bcrypt($data['password']);
         }
 
