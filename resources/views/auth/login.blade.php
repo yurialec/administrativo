@@ -89,7 +89,11 @@
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || 'Não foi possível realizar o login.');
+                const message = data.errors?.email?.[0]
+                    || data.message
+                    || 'Não foi possível realizar o login.';
+
+                throw new Error(message);
             }
 
             window.localStorage.setItem('sanctum_token', data.token);

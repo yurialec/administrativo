@@ -17,4 +17,15 @@ const router = createRouter({
     ]
 });
 
+router.beforeEach(() => {
+    const token = window.localStorage.getItem('sanctum_token');
+
+    if (!token) {
+        window.location.assign('/login');
+        return false;
+    }
+
+    return true;
+});
+
 export default router;

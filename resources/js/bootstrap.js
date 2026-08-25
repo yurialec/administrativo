@@ -29,6 +29,22 @@ if (sanctumToken) {
     window.axios.defaults.headers.common.Authorization = `Bearer ${sanctumToken}`;
 }
 
+window.axios.interceptors.response.use(
+    response => response,
+    error => {
+        if (
+            error.response?.status === 401 &&
+            window.location.pathname !== '/login'
+        ) {
+            window.localStorage.removeItem('sanctum_token');
+            delete window.axios.defaults.headers.common.Authorization;
+            window.location.assign('/login');
+        }
+
+        return Promise.reject(error);
+    }
+);
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
