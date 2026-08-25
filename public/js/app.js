@@ -28598,6 +28598,9 @@ var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_5__.createRouter)({
   routes: [].concat(_toConsumableArray(_admin__WEBPACK_IMPORTED_MODULE_0__["default"]), _toConsumableArray(_menus__WEBPACK_IMPORTED_MODULE_1__["default"]), _toConsumableArray(_roles__WEBPACK_IMPORTED_MODULE_2__["default"]), _toConsumableArray(_permissions__WEBPACK_IMPORTED_MODULE_3__["default"]), _toConsumableArray(_users__WEBPACK_IMPORTED_MODULE_4__["default"]))
 });
 router.beforeEach(function () {
+  if (window.location.pathname === '/login') {
+    return true;
+  }
   var token = window.localStorage.getItem('sanctum_token');
   if (!token) {
     window.location.assign('/login');

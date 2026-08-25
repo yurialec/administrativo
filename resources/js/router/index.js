@@ -18,6 +18,10 @@ const router = createRouter({
 });
 
 router.beforeEach(() => {
+    if (window.location.pathname === '/login') {
+        return true;
+    }
+
     const token = window.localStorage.getItem('sanctum_token');
 
     if (!token) {
