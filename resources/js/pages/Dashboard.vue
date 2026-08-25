@@ -40,7 +40,6 @@
 import Swal from 'sweetalert2';
 export default {
     name: 'Dashboard',
-
     methods: {
         handleDelete() {
             this.confirm(

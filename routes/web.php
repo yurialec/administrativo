@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,8 +19,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-require __DIR__ . '/auth.php';
+Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/{any?}', function () {
-    return view('layouts.app_admin');
-})->where('any', '(?!api(?:/|$)).*');
+Route::middleware('auth')->group(function () {
+    Route::get('/{any?}', function () {
+        return view('layouts.app_admin');
+    })->where('any', '.*');
+});

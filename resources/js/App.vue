@@ -52,14 +52,14 @@ export default {
         toggleSidebar() {
             this.isSidebarToggled = !this.isSidebarToggled;
         },
-        async logout() {
-            try {
-                await axios.post('/api/logout');
-            } finally {
-                window.localStorage.removeItem('sanctum_token');
-                delete axios.defaults.headers.common.Authorization;
-                window.location.assign('/login');
-            }
+        logout() {
+            axios.post('/logout')
+                .then(() => {
+                    window.location.href = '/login';
+                })
+                .catch(error => {
+                    console.error('Logout failed:', error);
+                });
         }
     }
 }
