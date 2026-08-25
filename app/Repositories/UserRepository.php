@@ -16,15 +16,21 @@ class UserRepository
     public function all()
     {
         return $this->user
-            ->with(['role' => function ($query) {
-                $query->select('id', 'name');
-            }])
+            ->with([
+                'role:id,name',
+                'role.permissions:id,name'
+            ])
             ->get();
     }
 
     public function find($id)
     {
-        return $this->user->query()->find($id);
+        return $this->user
+            ->with([
+                'role:id,name',
+                'role.permissions:id,name,slug'
+            ])
+            ->find($id);
     }
 
     public function create(array $data)

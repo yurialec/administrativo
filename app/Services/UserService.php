@@ -43,4 +43,32 @@ class UserService
     {
         return $this->userRepository->delete($id);
     }
+
+    public function addSessionVariables($id)
+    {
+        $user = $this->userRepository->find($id);
+
+        $sessionUser = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => [
+                'id' => $user->role->id,
+                'name' => $user->role->name,
+                'permissions' => $user->role->permissions
+                    ->map(function ($permission) {
+                        return [
+                            'id' => $permission->id,
+                            'name' => $permission->name,
+                            'slug' => $permission->slug,
+                        ];
+                    })
+                    ->toArray(),
+            ],
+        ];
+
+        session(['user' => $sessionUser]);
+
+        return $sessionUser;
+    }
 }
