@@ -17,12 +17,12 @@ class Acl
      */
     public function handle(Request $request, Closure $next, string $permissionNeeded)
     {
-        // if (!$this->hasPermission($permissionNeeded)) {
-        //     return response()->json([
-        //         'message' => 'Você não tem permissão para acessar essa funcionalidade.',
-        //         'code' => 'PERMISSION_DENIED',
-        //     ], Response::HTTP_FORBIDDEN);
-        // }
+        if (!$this->hasPermission($permissionNeeded)) {
+            return response()->json([
+                'message' => 'Você não tem permissão para acessar essa funcionalidade.',
+                'code' => 'PERMISSION_DENIED',
+            ], Response::HTTP_FORBIDDEN);
+        }
 
         return $next($request);
     }
