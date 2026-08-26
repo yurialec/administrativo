@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/sidebar', [HomeController::class, 'getSideBar']);
 
-    Route::prefix('menus')->group(function () {
+    Route::prefix('menus')->middleware('acl:menus')->group(function () {
         Route::get('/list', [MenuController::class, 'index'])->name('menus.index');
         Route::get('/find/{id}', [MenuController::class, 'show'])->whereNumber('id')->name('menus.show');
         Route::get('/list-to-create', [MenuController::class, 'listToCreate'])->name('menus.list-to-create');
@@ -35,7 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/change-menu-order/{id}', [MenuController::class, 'changeMenuOrder'])->whereNumber('id')->name('menus.changeMenuOrder');
     });
 
-    Route::prefix('roles')->group(function () {
+    Route::prefix('roles')->middleware('acl:roles')->group(function () {
         Route::get('/list', [RoleController::class, 'index'])->name('roles.index');
         Route::get('/dropdown-list', [RoleController::class, 'dropdownList']);
         Route::post('/store', [RoleController::class, 'store']);
@@ -44,14 +44,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/delete/{id}', [RoleController::class, 'delete'])->whereNumber('id')->name('roles.delete');
     });
 
-    Route::prefix('permissions')->group(function () {
+    Route::prefix('permissions')->middleware('acl:permissions')->group(function () {
         Route::get('/list', [PermissionController::class, 'index'])->name('permissions.index');
         Route::post('/store', [PermissionController::class, 'store'])->name('permissions.store');
         Route::get('/find/{id}', [PermissionController::class, 'show'])->whereNumber('id')->name('permissions.show');
         Route::put('/update/{id}', [PermissionController::class, 'update'])->whereNumber('id')->name('permissions.update');
         Route::delete('/delete/{id}', [PermissionController::class, 'destroy'])->whereNumber('id')->name('permissions.delete');
     });
-    Route::prefix('users')->group(function () {
+    Route::prefix('users')->middleware('acl:users')->group(function () {
         Route::get('/list', [UserController::class, 'index'])->name('users.index');
         Route::post('/store', [UserController::class, 'store'])->name('users.store');
         Route::get('/find/{id}', [UserController::class, 'show'])->whereNumber('id')->name('users.show');

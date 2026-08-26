@@ -28,6 +28,7 @@ class SidebarMenuService
             Log::error('Erro ao carregar sidebar menus', [
                 'message' => $e->getMessage(),
             ]);
+
             return collect();
         }
     }
@@ -235,6 +236,67 @@ class SidebarMenuService
 
     private function refreshSidebarSession(): void
     {
-        session()->put('sidebar', $this->sidebarMenuRepository->getSidebar());
+        $menus = $this->sidebarMenuRepository->getSidebar();
+        $menus = $this->validatePermissionSidebar($menus);
+        session()->put('sidebar', $menus);
+    }
+
+    private function validatePermissionSidebar($data)
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return collect();
+        }
+
+        $role = $user->role;
+        $permissions = [];
+
+        if ($role && $role->permissions) {
+            $permissions = $role->permissions
+                ->pluck('slug')
+                ->toArray();
+        }
+
+        return $this->filterMenusByPermission($data, $permissions);
+    }
+
+    private function filterMenusByPermission($menus, array $permissions): array
+    {
+        return collect($menus)
+            ->map(function ($menu) use ($permissions) {
+
+                $menu = is_array($menu) ? $menu : $menu->toArray();
+
+                if (!empty($menu['children'])) {
+                    $menu['children'] = $this->filterMenusByPermission(
+                        $menu['children'],
+                        $permissions
+                    );
+                }
+
+                if (!empty($menu['children'])) {
+                    return $menu;
+                }
+
+                if (($menu['route'] ?? null) === '/') {
+                    return $menu;
+                }
+
+                if (($menu['route'] ?? null) === '#' || ($menu['url'] ?? null) === '#') {
+                    return null;
+                }
+
+                $slug = trim($menu['route'] ?? '', '/');
+
+                if (in_array($slug, $permissions, true)) {
+                    return $menu;
+                }
+
+                return null;
+            })
+            ->filter()
+            ->values()
+            ->toArray();
     }
 }
