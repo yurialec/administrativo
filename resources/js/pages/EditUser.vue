@@ -81,6 +81,7 @@ export default {
                 email: '',
                 role_id: '',
             },
+            roles: [],
             new_password: '',
             changePass: false,
         };
@@ -105,7 +106,8 @@ export default {
                 });
         },
         searchRoles() {
-            axios.get(`/api/roles/list`)
+            this.isLoading = true;
+            axios.get(`/api/users/roles/list`)
                 .then(response => {
                     this.roles = response.data;
                 })

@@ -4,16 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Services\RoleService;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     protected $userService;
+    protected $roleService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, RoleService $roleService)
     {
         $this->userService = $userService;
+        $this->roleService = $roleService;
     }
 
     public function index()
@@ -63,5 +66,11 @@ class UserController extends Controller
         }
 
         return response()->json(null, 204);
+    }
+
+    public function listRoles()
+    {
+        $roles = $this->roleService->dropdownList();
+        return response()->json($roles);
     }
 }

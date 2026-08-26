@@ -27,6 +27,7 @@ __webpack_require__.r(__webpack_exports__);
         email: '',
         role_id: ''
       },
+      roles: [],
       new_password: '',
       changePass: false
     };
@@ -49,7 +50,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     searchRoles: function searchRoles() {
       var _this2 = this;
-      axios.get("/api/roles/list").then(function (response) {
+      this.isLoading = true;
+      axios.get("/api/users/roles/list").then(function (response) {
         _this2.roles = response.data;
       })["catch"](function (error) {
         alertDanger(error);
@@ -211,7 +213,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     required: ""
   }, [_cache[10] || (_cache[10] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
     value: ""
-  }, "Selecione um perfil", -1 /* CACHED */)), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.roles, function (role) {
+  }, "Selecione um perfil", -1 /* CACHED */)), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.roles, function (role) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
       key: role.id,
       value: role.id
