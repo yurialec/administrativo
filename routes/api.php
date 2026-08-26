@@ -24,6 +24,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/sidebar', [HomeController::class, 'getSideBar']);
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('update.profile');
 
     Route::prefix('menus')->middleware('acl:menus')->group(function () {
         Route::get('/list', [MenuController::class, 'index'])->name('menus.index');

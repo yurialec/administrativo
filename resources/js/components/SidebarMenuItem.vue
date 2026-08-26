@@ -1,18 +1,21 @@
 <template>
     <div class="sidebar-menu-item">
-        <router-link v-if="isLink" class="nav-link sidebar-menu-link" :class="activeClasses" :style="itemStyle"
+        <router-link v-if="isLink"
+            class="nav-link sidebar-menu-link"
+            :class="activeClasses"
+            :style="itemStyle"
             :to="menu.route">
-            <div v-if="menu.icon" class="sb-nav-link-icon">
+            <div v-if="menu.icon" class="sb-nav-link-icon text-primary">
                 <i :class="`${menu.icon} fs-4`"></i>
             </div>
-            {{ menu.title }} <i :class="menu.alert ? 'd-inline' : 'd-none'" class="bi bi-exclamation-triangle fs-5 text-danger ms-2"></i>
+            <span :class="labelClasses">{{ menu.title }}</span>
         </router-link>
         <button v-else class="nav-link btn btn-link sidebar-menu-link text-start text-decoration-none"
             :class="buttonClasses" :style="itemStyle" type="button" @click="$emit('toggle-menu', menu.id)">
             <div v-if="menu.icon" class="sb-nav-link-icon">
-                <i :class="`${menu.icon} fs-4`"></i>
+                <i :class="`${menu.icon} fs-4 text-primary`"></i>
             </div>
-            {{ menu.title }} <i :class="menu.alert ? 'd-inline' : 'd-none'" class="bi bi-exclamation-triangle fs-5 text-danger"></i>
+            <span :class="labelClasses">{{ menu.title }}</span>
             <div class="sb-sidenav-collapse-arrow">
                 <i class="bi bi-chevron-down"></i>
             </div>
@@ -68,6 +71,11 @@ export default {
                 collapsed: !this.isOpen
             };
         },
+        labelClasses() {
+            return this.isActive
+                ? 'fw-semibold text-primary text-opacity-10'
+                : 'fw-semibold text-dark';
+        },
         itemStyle() {
             return {
                 paddingLeft: `${1 + (this.depth * 1.25)}rem`
@@ -77,7 +85,35 @@ export default {
 
     methods: {
         isCurrentRoute(menu) {
-            return menu.route && this.$route.path === menu.route;
+            if (!menu.route || menu.route === '#') {
+                return false;
+            }
+
+            const menuPath = this.resolveMenuPath(menu.route);
+            const currentPath = this.normalizePath(this.$route.path);
+
+            return currentPath === menuPath || currentPath.startsWith(`${menuPath}/`);
+        },
+        resolveMenuPath(route) {
+            const resolvedRoute = this.$router.resolve(route);
+            const redirect = resolvedRoute.matched.find(record => record.redirect)?.redirect;
+
+            if (redirect) {
+                const redirectTarget = typeof redirect === 'function'
+                    ? redirect(resolvedRoute)
+                    : redirect;
+
+                return this.normalizePath(this.$router.resolve(redirectTarget).path);
+            }
+
+            return this.normalizePath(resolvedRoute.path);
+        },
+        normalizePath(path) {
+            if (!path || path === '/') {
+                return '/';
+            }
+
+            return path.replace(/\/+$/, '');
         },
         hasActiveChild(menu) {
             if (!menu.children || menu.children.length === 0) {

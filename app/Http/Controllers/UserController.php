@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Services\RoleService;
 use App\Services\UserService;
@@ -72,5 +73,25 @@ class UserController extends Controller
     {
         $roles = $this->roleService->dropdownList();
         return response()->json($roles);
+    }
+
+    public function profile()
+    {
+        $user = $this->userService->profile(Auth::id());
+
+        return response()->json($user);
+    }
+
+    public function updateProfile(UpdateProfileRequest $request)
+    {
+        $user = $this->userService->updateProfile(
+            $request->validated(),
+            Auth::id()
+        );
+
+        return response()->json([
+            'message' => 'Perfil atualizado com sucesso!',
+            'user' => $user,
+        ]);
     }
 }

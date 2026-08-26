@@ -71,4 +71,28 @@ class UserService
 
         return $sessionUser;
     }
+
+    public function profile($id)
+    {
+        return $this->userRepository->find($id);
+    }
+
+    public function updateProfile(array $data, $id)
+    {
+        if (! empty($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        unset($data['password_confirmation']);
+
+        $this->userRepository->update($data, $id);
+
+        // Mantém a sessão sincronizada enquanto ela ainda for usada pelo menu
+        // e pelo middleware de permissões.
+        $this->addSessionVariables($id);
+
+        return $this->profile($id);
+    }
 }
