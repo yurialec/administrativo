@@ -23,7 +23,7 @@ class SidebarMenuSeeder extends Seeder
                 ],
                 [
                     'title' => 'Dashboard',
-                    'icon' => 'bi bi-speedometer2',
+                    'icon' => 'bi bi-speedometer',
                     'url' => null,
                     'order' => 1,
                 ]
